@@ -1,0 +1,43 @@
+{
+  "name": "create-express-app",
+  "description": "Fast create your app express.js",
+  "author": "Nguyen Thanh",
+  "version": "0.0.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nguyenthanh1995/create-express-app"
+  },
+  "bugs": {
+    "url": "https://github.com/nguyenthanh1995/create-express-app/issues"
+  },
+  "main": "./bin/create-express-app",
+  "bin": {
+    "create-express-app": "./bin/create-express-app"
+  },
+  "engines": {
+    "node": ">= 8.0.0"
+  },
+  "keywords": [
+    "create-express-app"
+  ],
+  "dependencies": {
+    "async": "^3.2.0",
+    "chalk": "^4.1.1",
+    "commander": "^7.2.0",
+    "consolidate": "^0.16.0",
+    "download-git-repo": "^3.0.2",
+    "handlebars": "^4.7.7",
+    "inquirer": "^8.0.0",
+    "metalsmith": "^2.3.0",
+    "multimatch": "^5.0.0",
+    "ora": "^5.4.0",
+    "read-metadata": "^1.0.0",
+    "request": "^2.88.2",
+    "semver": "^7.3.5",
+    "tildify": "^2.0.0",
+    "user-home": "^3.0.0",
+    "util": "^0.12.3",
+    "validate-npm-package-name": "^3.0.0"
+  }
+}
