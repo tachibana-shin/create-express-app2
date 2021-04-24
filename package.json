@@ -1,19 +1,19 @@
 {
-  "name": "create-express-app",
+  "name": "create-express-app2",
   "description": "Fast create your app express.js",
   "author": "Nguyen Thanh",
   "version": "0.0.1",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/nguyenthanh1995/create-express-app"
+    "url": "git://github.com/nguyenthanh1995/create-express-app2"
   },
   "bugs": {
-    "url": "https://github.com/nguyenthanh1995/create-express-app/issues"
+    "url": "https://github.com/nguyenthanh1995/create-express-app2/issues"
   },
-  "main": "./bin/create-express-app",
+  "main": "./bin/create-express-app2",
   "bin": {
-    "create-express-app": "./bin/create-express-app"
+    "create-express-app": "./bin/create-express-app2"
   },
   "engines": {
     "node": ">= 8.0.0"
