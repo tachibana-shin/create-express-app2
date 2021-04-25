@@ -2,7 +2,7 @@
   "name": "create-express-app2",
   "description": "Fast create your app express.js",
   "author": "Nguyen Thanh",
-  "version": "0.0.1",
+  "version": "0.0.1-b1",
   "license": "MIT",
   "repository": {
     "type": "git",
