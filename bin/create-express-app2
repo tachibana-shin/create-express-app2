@@ -76,11 +76,25 @@ if (!template) {
   init();
 }
 
-function init() {
+async function init() {
   const hasSlash = template?.indexOf("/") > -1;
-  const rawName = program.args[1];
+  let rawName = program.args[1];
+
+  if (!rawName) {
+    rawName = await inquirer
+      .prompt([
+        {
+          type: "string",
+          name: "rawName",
+          required: true,
+          message: "Project name",
+        },
+      ])
+      .then(({ rawName }) => rawName);
+  }
+
   const inPlace = !rawName || rawName === ".";
-  const name = inPlace ? path.relative("../", process.cwd()) : rawName;
+  const name = inPlace ? process.cwd() : rawName;
   const to = path.resolve(rawName || ".");
   const clone = program.clone || false;
 
