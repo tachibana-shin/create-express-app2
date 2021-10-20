@@ -30,51 +30,48 @@ program.parse(process.argv);
 let template = program.args?.[0];
 
 if (!template) {
-  if (!template) {
-    const spinner = ora("getting list templates from github...");
-    spinner.start();
+  const spinner = ora("getting list templates from github...");
+  spinner.start();
 
-    request(
-      {
-        url: "https://api.github.com/users/express-templates/repos",
-        headers: {
-          "User-Agent": "shin-templates",
-        },
+  request(
+    {
+      url: "https://api.github.com/users/express-templates/repos",
+      headers: {
+        "User-Agent": "shin-templates",
       },
-      async (err, _res, body) => {
-        if (err) logger.fatal(err);
-        const requestBody = JSON.parse(body);
-        spinner.stop();
-        const listTemplates = requestBody.map((repo) => {
-          return (
+    },
+    async (err, _res, body) => {
+      if (err) logger.fatal(err);
+      const requestBody = JSON.parse(body);
+      spinner.stop();
+      const listTemplates = requestBody.map((repo) => {
+        return {
+          name:
             "  " +
             chalk.yellow("★") +
             "  " +
             chalk.blue(repo.name) +
             " - " +
-            repo.description
-          );
-        });
+            (repo.description || ""),
+          value: repo.name,
+        };
+      });
 
-        template = await inquirer
-          .prompt([
-            {
-              type: "list",
-              message: "Select template to start project:",
-              choices: listTemplates.map((name) => {
-                return {
-                  name,
-                  value: name,
-                };
-              }),
-            },
-          ])
-          .then(({ value }) => value);
+      template = await inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "tpl",
+            message: "Select template to start project:",
+            choices: listTemplates,
+            required: true,
+          },
+        ])
+        .then(({ tpl }) => tpl);
 
-        init();
-      }
-    );
-  }
+      init();
+    }
+  );
 } else {
   init();
 }
