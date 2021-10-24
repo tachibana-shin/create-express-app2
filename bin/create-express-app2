@@ -64,7 +64,7 @@ if (!template) {
             name: "tpl",
             message: "Select template to start project:",
             choices: listTemplates,
-            required: true,
+            prefix: "express-templates/",
           },
         ])
         .then(({ tpl }) => tpl);
@@ -86,8 +86,10 @@ async function init() {
         {
           type: "string",
           name: "rawName",
-          required: true,
-          message: "Project name",
+          validate(val) {
+            return !!val;
+          },
+          message: "Folder name containing the project (create if don't exists):",
         },
       ])
       .then(({ rawName }) => rawName);
