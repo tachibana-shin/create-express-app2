@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 const request = require("request");
 
 const download = require("download-git-repo");
