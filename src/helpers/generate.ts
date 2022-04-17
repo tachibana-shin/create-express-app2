@@ -1,15 +1,18 @@
-const chalk = require("chalk");
-const Metalsmith = require("metalsmith");
-const Handlebars = require("handlebars");
-const async = require("async");
-const render = require("consolidate").handlebars.render;
-const path = require("path");
-const multimatch = require("multimatch");
-const getOptions = require("./options");
-const ask = require("./ask");
-const filter = require("./filter");
-const logger = require("./logger");
-const complete = require("./complete");
+import path from "path";
+
+import chalk from "chalk";
+import {handlebars} from "consolidate"
+import Handlebars from "handlebars";
+import Metalsmith from "metalsmith";
+import multimatch from "multimatch";
+
+import {ask} from "./ask";
+import {complete} from "./complete";
+import {filter} from "./filter";
+import {getOptions, Options} from "./options";
+
+
+const { render } = handlebars;
 
 // register handlebars helper
 Handlebars.registerHelper("if_eq", function (a, b, opts) {
@@ -20,16 +23,8 @@ Handlebars.registerHelper("unless_eq", function (a, b, opts) {
   return a === b ? opts.inverse(this) : opts.fn(this);
 });
 
-/**
- * Generate a template given a `src` and `dest`.
- *
- * @param {String} name
- * @param {String} src
- * @param {String} dest
- * @param {Function} done
- */
 
-module.exports = function generate(name, src, dest, done) {
+module.exports = function generate(name: string, src: string, dest: string, done: (arg0: Error | null) => void) {
   const opts = getOptions(name, src);
   const metalsmith = Metalsmith(path.join(src, "template"));
   const data = Object.assign(metalsmith.metadata(), {
@@ -72,73 +67,49 @@ module.exports = function generate(name, src, dest, done) {
   return data;
 };
 
-/**
- * Create a middleware for asking questions.
- *
- * @param {Object} prompts
- * @return {Function}
- */
 
-function askQuestions(prompts) {
-  return (files, metalsmith, done) => {
+function askQuestions(prompts: Options["prompts"]) {
+  return (files: any, metalsmith: { metadata: () => any; }, done: any) => {
     ask(prompts, metalsmith.metadata(), done);
   };
 }
 
-/**
- * Create a middleware for filtering files.
- *
- * @param {Object} filters
- * @return {Function}
- */
-
-function filterFiles(filters) {
-  return (files, metalsmith, done) => {
+function filterFiles(filters: Record<string, string>) {
+  return (files: Record<string, string>, metalsmith: { metadata: () => any; }, done: any) => {
     filter(files, filters, metalsmith.metadata(), done);
   };
 }
 
-/**
- * Template in place plugin.
- *
- * @param {Object} files
- * @param {Metalsmith} metalsmith
- * @param {Function} done
- */
-
-function renderTemplateFiles(skipInterpolation) {
+function renderTemplateFiles(skipInterpolation: Options["skipInterpolation"]) {
   skipInterpolation =
     typeof skipInterpolation === "string"
       ? [skipInterpolation]
       : skipInterpolation;
-  return (files, metalsmith, done) => {
+  return (files: { [x: string]: { contents: Buffer; }; }, metalsmith: { metadata: () => any; }, done: any) => {
     const keys = Object.keys(files);
     const metalsmithMetadata = metalsmith.metadata();
-    async.each(
-      keys,
-      (file, next) => {
-        // skipping files with skipInterpolation option
+    // eslint-disable-next-line functional/no-loop-statement
+    for (const file in keys) {
+
         if (
           skipInterpolation &&
           multimatch([file], skipInterpolation, { dot: true }).length
         ) {
-          return next();
+          return
         }
         const str = files[file].contents.toString();
         // do not attempt to render files that do not have mustaches
         if (!/{{([^{}]+)}}/g.test(str)) {
-          return next();
+          return
         }
         render(str, metalsmithMetadata, (err, res) => {
           if (err) {
             err.message = `[${file}] ${err.message}`;
-            return next(err);
+            return
           }
           files[file].contents = new Buffer(res);
-          next();
         });
-      },
-      done
-    );
+      }
+    
   };
-}
+}                                                                                                                                                                                                                                                                                  
